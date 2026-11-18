@@ -262,6 +262,10 @@ python tests/run_all.py realm      # 只跑名字里含 realm 的
 ## 七、版本更新记录 (Changelog)
 
 本版更新与完整历史版本请查阅 **[docs/CHANGELOG.md](docs/CHANGELOG.md)**。
+### Unreleased
+
+- **国内版桌面端身份对齐 5.11.3**（默认值）：`DESKTOP_VERSION_CN` / `DESKTOP_UA_CN` / `DESKTOP_CLI_CN` 由 5.8.3 + 内置 CLI 2.161.0 更新为 **5.11.3 + 2.176.0**，UA 为 `WorkBuddy/5.11.3 WorkBuddy/5.11.3 CLI/2.176.0`。取值来自本机国内版客户端的日志原样记录、`resources/install-manifest.json` 的 `appVersion` 与 `WorkBuddy.exe` 的 FileVersion，以及内置 `app.asar.unpacked/cli/package.json`（`@genie/agent-cli` 2.176.0）。影响国内版 Chat 出站头（`X-IDE-Version` / `User-Agent`）、计费与活动上报的 UA、桌面腿心跳与事件上报；国际版、VSCode、独立 CLI 三种身份不变，面板已存的 `identity_versions` 覆盖值优先于新默认值。 / **CN desktop identity moves to 5.11.3** (defaults): `DESKTOP_VERSION_CN` / `DESKTOP_UA_CN` / `DESKTOP_CLI_CN` go from 5.8.3 + bundled CLI 2.161.0 to **5.11.3 + 2.176.0**, i.e. `WorkBuddy/5.11.3 WorkBuddy/5.11.3 CLI/2.176.0`. The values come from the local CN client's own log line, `install-manifest.json`'s `appVersion`, `WorkBuddy.exe`'s FileVersion and the bundled `app.asar.unpacked/cli/package.json` (`@genie/agent-cli` 2.176.0). It affects the CN chat headers (`X-IDE-Version` / `User-Agent`), billing and campaign-report UAs, and the desktop-leg heartbeats; the intl desktop, VSCode and standalone-CLI identities are unchanged, and any `identity_versions` override already saved in the panel still wins over the new defaults.
+
 ### v2.1.3
 
 - **运营活动与成长任务补全**：新增星巴克协作、记者节福利活动，接入任务读取、`viewed`、事件上报、`claim` 与 `claimed_at` 回读；技能分享改为创建真实分享渠道并确认进度后领奖；模板任务按服务端场景逐组上报四事件。手机 App 对话任务只提示、不伪造。

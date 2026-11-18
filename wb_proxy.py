@@ -18101,7 +18101,6 @@ def open_upstream(payload, session_key=None, target_realm=None, prebuilt_body=No
         tried.add(account.uid)
         last_uid = account.uid
         slot_held = account
-        cfg = wb_accounts.get_realm_config(account.realm)
         chat_url = account.chat_base_url() + CHAT_PATH
         # The cache key is account scoped, so it is rebuilt per candidate rather
         # than once up front. Opt-in only: measurement showed the upstream
@@ -28908,7 +28907,9 @@ def _log_startup_summary(args, api_key_generated):
     elif wb_identity.CN_CHAT_BASE_IGNORED:
         log("cn upstream: ignored WB_CN_CHAT_UPSTREAM=%r (not an http(s) URL), using %s" % (
             wb_identity.CN_CHAT_BASE_IGNORED, wb_identity.CN_CHAT_BASE_DEFAULT))
-    log("user-agent : %s" % wb_accounts.USER_AGENT)
+    log("user-agent : %s" % (
+        wb_accounts.USER_AGENT if args.user_agent
+        else wb_accounts.get_realm_config(CURRENT_REALM)["chat_ua"]))
     if args.host == "0.0.0.0":
         ips = local_ip_addresses() or ["<this-pc-ip>"]
         print()

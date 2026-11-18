@@ -29,8 +29,12 @@ CHAT_BASE = wb_identity.CN_CHAT_BASE
 BILL_BASE = "https://www.codebuddy.cn"
 WEB_BASE = "https://www.workbuddy.cn"
 #: 本模块只跑国内版，桌面端 UA 与 wb_identity 同一来源，避免两处各写一份
-#: 版本号（国际版 5.8.4 对齐时就是这么漏掉一份的）。
-DESKTOP_UA = wb_identity.DESKTOP_UA_CN
+#: 版本号（国际版 5.8.4 对齐时就是这么漏掉一份的）。按调用取值而不是固化在
+#: 模块常量里：面板改的 identity_versions 覆盖同样要作用到这里。
+def desktop_ua():
+    return wb_identity.desktop_ua("cn")
+
+
 WEB_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
 LIB_DOC_URL = "https://www.workbuddy.cn/space/d/o0KWYeynteVv06UnAZqIFm"
 _EXPERT_ID_RE = re.compile(r"^ex_[A-Za-z0-9]{6,64}$")
@@ -603,8 +607,6 @@ def _report_desktop_events(account, events, base=None):
     """
     envelope = wb_fingerprint.get_desktop_fingerprint(
         account.uid, getattr(account, "nickname", ""))
-    envelope["ideVersion"] = wb_identity.DESKTOP_VERSION_CN
-    envelope["extVersion"] = wb_identity.DESKTOP_VERSION_CN
     arr = []
     for event in events:
         item = dict(envelope)
@@ -614,7 +616,7 @@ def _report_desktop_events(account, events, base=None):
     headers.update({
         "Content-Type": "application/json;charset=UTF-8",
         "Accept": "application/json, text/plain, */*",
-        "User-Agent": DESKTOP_UA,
+        "User-Agent": desktop_ua(),
         "X-Domain": "copilot.tencent.com",
         "X-Product": "SaaS",
         "X-Request-ID": wb_fingerprint.generate_request_id(account.uid),
@@ -948,7 +950,7 @@ def _create_skill_share_channel(account, skill):
     headers.update({
         "Content-Type": "application/json",
         "Accept": "application/json, text/plain, */*",
-        "User-Agent": DESKTOP_UA,
+        "User-Agent": desktop_ua(),
         "X-User-Id": account.uid,
         "X-Domain": "copilot.tencent.com",
     })

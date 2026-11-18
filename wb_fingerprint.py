@@ -18,6 +18,8 @@ import hashlib
 import time
 import uuid
 
+import wb_identity
+
 
 def derive_id(uid: str, salt: str) -> str:
     """由 uid + salt 稳定派生一个带连字符的 UUID 形状设备标识。
@@ -52,8 +54,16 @@ def generate_request_id(uid: str) -> str:
 
 
 def get_desktop_fingerprint(uid: str, nickname: str = "", os_name: str = "win32") -> dict:
-    """生成上报事件所需的标准完整桌面端指纹。"""
+    """生成上报事件所需的标准完整桌面端指纹。
+
+    ideVersion / extVersion 与出站头同一来源，并且按调用取
+    ``desktop_version("cn")``——面板改的 identity_versions 覆盖也要作用到这里，
+    不能读模块常量。releaseDate / commit 取自国内版客户端 product-config 里的
+    ``date`` / ``commit``（客户端 ProductInfoEventProcessor 就是这么填的），
+    2026-11-12 那份对应 5.11.3。
+    """
     now = int(time.time() * 1000)
+    version = wb_identity.desktop_version("cn")
     return {
         "timezone": "Asia/Shanghai",
         "reportDelay": 2000,
@@ -61,15 +71,15 @@ def get_desktop_fingerprint(uid: str, nickname: str = "", os_name: str = "win32"
         "username": nickname,
         "userNickname": nickname,
         "product": "SaaS",
-        "releaseDate": 1789036585355,
-        "commit": "5f9692923c93033111c51ad7b003eb80204a9b75",
+        "releaseDate": 1794502175226,
+        "commit": "ecace0f7028166695994300182295329b8b95449",
         "ideName": "WorkBuddy",
         "ideType": "WorkBuddy",
-        "ideVersion": "5.8.4",
+        "ideVersion": version,
         "machineId": derive_id(uid, "machine"),
         "sessionId": session_id(uid),
         "extName": "workbuddy-desktop",
-        "extVersion": "5.8.4",
+        "extVersion": version,
         "os": os_name,
         "arch": "x64",
         "osVersion": "10.0.26220",

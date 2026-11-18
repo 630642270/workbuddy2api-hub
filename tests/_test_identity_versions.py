@@ -42,7 +42,7 @@ class DefaultVersionTests(unittest.TestCase):
         self.assertEqual(wb_identity.desktop_ua("intl"),
                          "WorkBuddy/5.9.4 workbuddy-ai/5.9.4 CLI/2.165.0")
         self.assertEqual(wb_identity.desktop_ua("cn"),
-                         "WorkBuddy/5.8.3 WorkBuddy/5.8.3 CLI/2.161.0")
+                         "WorkBuddy/5.11.3 WorkBuddy/5.11.3 CLI/2.176.0")
         self.assertEqual(wb_identity.vscode_ua(),
                          "VSCode/1.119.0 CodeBuddy/4.12.39997873")
         self.assertEqual(wb_identity.cli_version(), "2.168.2")
@@ -143,7 +143,7 @@ class PasswordGateTests(unittest.TestCase):
         status, _body = self.save("wrong", {"desktop_cn": "9.9.9"})
         self.assertEqual(status, 401)
         self.assertEqual(wb_settings.identity_versions(self.dir), {})
-        self.assertEqual(wb_identity.desktop_version("cn"), "5.8.3")
+        self.assertEqual(wb_identity.desktop_version("cn"), "5.11.3")
 
     def test_default_panel_password_saves_and_applies(self):
         status, body = self.save("admin", {"desktop_cn": "9.9.9"})

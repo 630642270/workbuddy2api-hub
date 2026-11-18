@@ -383,8 +383,9 @@ REALM_CONFIGS = {
         "billing_upstream": "https://www.codebuddy.cn",
         "origin": "https://www.codebuddy.cn",
         "domain": "copilot.tencent.com",
-        # 国内版没有对应抓包，取值维持原样，但同样从 wb_identity 取，
-        # 免得两处各写一份（国际版 5.8.4 对齐时就漏改过 intl 那一份）。
+        # 国内版 5.11.3 / 内置 CLI 2.176.0 取自本机客户端日志与安装清单；
+        # 同样从 wb_identity 取，免得两处各写一份（国际版 5.8.4 对齐时就
+        # 漏改过 intl 那一份）。
         "chat_ua": wb_identity.DESKTOP_UA_CN,
         "billing_ua": "WorkBuddy/%s" % wb_identity.DESKTOP_VERSION_CN,
         "info_filename": "workbuddy-desktop.info",

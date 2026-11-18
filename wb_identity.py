@@ -10,7 +10,10 @@
        实测 5.9.4（本机桌面客户端 5.9.4 日志 + app.asar 解包，账号 uid 已脱敏）:
          X-IDE-Version: 5.9.4
          User-Agent: WorkBuddy/5.9.4 workbuddy-ai/5.9.4 CLI/2.165.0
-     - 国内版端点: copilot.tencent.com（无对应抓包，维持 5.5.6 与原 UA）
+     - 国内版端点: copilot.tencent.com
+       实测 5.11.3（本机国内版客户端 5.11.3 的日志原样记录）:
+         X-IDE-Version: 5.11.3
+         User-Agent: WorkBuddy/5.11.3 WorkBuddy/5.11.3 CLI/2.176.0
 
   2. 官方 VSCode 扩展 (vscode / vsc):
      - X-IDE-Type / X-IDE-Name: VSCode
@@ -79,12 +82,16 @@ DESKTOP_VERSION_INTL = "5.9.4"
 # 注意 Electron 主进程自己发的旁路请求（msg-center / conversations）UA 是
 # workbuddy-ai/... workbuddy-ai/...，两者不是同一条链路，别照抄错。
 DESKTOP_UA_INTL = "WorkBuddy/5.9.4 workbuddy-ai/5.9.4 CLI/2.165.0"
-# 国内版桌面端：2026-10-18 两区桌面端实跑（Go 版抓包记录）为 5.8.3、
-# 内置 CLI 2.161.0；第二段按国内版是 WorkBuddy（国际版是 workbuddy-ai）。
-# 本机只装了国际版 5.9.4，CN 的 5.9.4 版本号未能本地复核，沿用旧值。
-DESKTOP_VERSION_CN = "5.8.3"
-DESKTOP_UA_CN = "WorkBuddy/5.8.3 WorkBuddy/5.8.3 CLI/2.161.0"
-DESKTOP_CLI_CN = "2.161.0"
+# 国内版桌面端：2026-11-18 本机国内版客户端 5.11.3 的日志原样记录：
+#   user-agent: WorkBuddy/5.11.3 WorkBuddy/5.11.3 CLI/2.176.0
+# 版本号另有两处本地实锤：resources/install-manifest.json 的 appVersion 与
+# WorkBuddy.exe 的 FileVersion 都是 5.11.3；内置 CLI 是
+# app.asar.unpacked/cli/package.json 的 @genie/agent-cli 2.176.0。
+# 第二段按国内版是 WorkBuddy（新版 product.json 的 applicationName 也是
+# WorkBuddy，不再是 workbuddy-ai）。
+DESKTOP_VERSION_CN = "5.11.3"
+DESKTOP_UA_CN = "WorkBuddy/5.11.3 WorkBuddy/5.11.3 CLI/2.176.0"
+DESKTOP_CLI_CN = "2.176.0"
 
 #: 官方 CodeBuddy CLI 的版本号：npm 包 @tencent-ai/codebuddy-code 的 package
 #: version。product.json 没有覆盖 platformVersion / productVersion，所以
@@ -541,8 +548,9 @@ def build_identity_headers(product, realm, uid, token,
         headers.update(trace_headers(with_parent=compat))
         if compat:
             # Desktop profile reported by workbuddy2api-panel's headers.go
-            # (CN 5.8.3 / intl 5.8.4); shared SDK values remain configurable.
-            # Not a claim that Python's TLS stack matches the official client.
+            # (CN 5.8.3 / intl 5.8.4, the panel's own baseline); shared SDK
+            # values remain configurable. Not a claim that Python's TLS stack
+            # matches the official client.
             sdk_headers = cli_stainless_headers()
             # Desktop request timeout is not verified; do not copy CLI's budget.
             sdk_headers.pop("x-stainless-timeout", None)

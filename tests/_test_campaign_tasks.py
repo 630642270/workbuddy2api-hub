@@ -215,8 +215,10 @@ class CampaignTests(unittest.TestCase):
             FakeAccount(), [{"eventCode": "playbook_prompt_send"}]))
         self.assertEqual(calls[0].full_url, T.CHAT_BASE + "/v2/report")
         body = json.loads(calls[0].data.decode("utf-8"))
-        self.assertEqual(body[0]["ideVersion"], T.wb_identity.DESKTOP_VERSION_CN)
-        self.assertEqual(body[0]["extVersion"], T.wb_identity.DESKTOP_VERSION_CN)
+        self.assertEqual(body[0]["ideVersion"],
+                         T.wb_identity.desktop_version("cn"))
+        self.assertEqual(body[0]["extVersion"],
+                         T.wb_identity.desktop_version("cn"))
         self.assertEqual(body[0]["userId"], FakeAccount.uid)
         self.assertEqual(calls[0].get_header("X-domain"), "copilot.tencent.com")
 
